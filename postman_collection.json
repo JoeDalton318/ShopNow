@@ -1,0 +1,356 @@
+{
+	"info": {
+		"_postman_id": "a8c1b2d3-e4f5-4a6b-8c7d-9e8f0a1b2c3d",
+		"name": "ShopNow+ API",
+		"description": "Collection Postman pour l'API du projet ShopNow+",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Produits & Catalogue",
+			"item": [
+				{
+					"name": "Lister les produits (avec filtres)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/produits?search=shirt&gender=Men&ordering=-prix",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"produits"
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": "shirt",
+									"description": "Recherche textuelle dans le nom du produit"
+								},
+								{
+									"key": "gender",
+									"value": "Men",
+									"description": "Filtre par genre (ex: Men, Women, Unisex)"
+								},
+								{
+									"key": "ordering",
+									"value": "-prix",
+									"description": "Tri par prix décroissant (prix, -prix, nom)"
+								},
+								{
+									"key": "colour",
+									"value": "Blue",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Récupère la liste des produits avec des options de filtrage et de tri."
+					},
+					"response": []
+				},
+				{
+					"name": "Détail d'un produit",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/produits/1597",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"produits",
+								"1597"
+							]
+						},
+						"description": "Récupère les informations détaillées pour un seul produit. L'événement `produit-consulte` est envoyé à Kafka."
+					},
+					"response": []
+				},
+				{
+					"name": "Lister les catégories",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/categories",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"categories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Lister les filtres disponibles",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/filtres",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"filtres"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Authentification",
+			"item": [
+				{
+					"name": "Inscription (Register)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"test@example.com\",\n    \"password\": \"password123\",\n    \"nom\": \"Test\",\n    \"prenom\": \"User\",\n    \"genre\": \"homme\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/auth/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Connexion (Login)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"test@example.com\",\n    \"password\": \"password123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Profil utilisateur (Me)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/auth/me",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"auth",
+								"me"
+							]
+						},
+						"description": "Récupère le profil de l'utilisateur actuellement connecté (nécessite que le cookie de session soit envoyé)."
+					},
+					"response": []
+				},
+				{
+					"name": "Déconnexion (Logout)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/auth/logout",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Panier & Commandes",
+			"item": [
+				{
+					"name": "Ajouter au panier",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"produit_id\": 1597,\n    \"quantite\": 1,\n    \"client_id\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/panier/ajouter",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"panier",
+								"ajouter"
+							]
+						},
+						"description": "Ajoute un produit au panier. Envoie les événements `article-ajoute` et `stock-mis-a-jour` à Kafka."
+					},
+					"response": []
+				},
+				{
+					"name": "Passer une commande",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"client_id\": 1,\n    \"total\": 150.50,\n    \"items\": [\n        {\n            \"variante_id\": 1, \n            \"produit_id\": 1597,\n            \"quantite\": 1,\n            \"prix_unitaire\": 100.50\n        },\n        {\n            \"variante_id\": 3, \n            \"produit_id\": 1163,\n            \"quantite\": 1,\n            \"prix_unitaire\": 50.00\n        }\n    ],\n    \"methode_paiement\": \"carte_bancaire\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/commande",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"commande"
+							]
+						},
+						"description": "Valide une commande. Envoie les événements `commande-validee`, `paiement-accepte` et `stock-mis-a-jour` à Kafka."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Analyses & Recommandations",
+			"item": [
+				{
+					"name": "Recommandations personnalisées",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/recommendations",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"recommendations"
+							]
+						},
+						"description": "Retourne des recommandations basées sur le genre de l'utilisateur connecté. Nécessite d'être authentifié."
+					},
+					"response": []
+				},
+				{
+					"name": "Top 5 produits consultés (temps réel)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/top-produits-consultes",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"top-produits-consultes"
+							]
+						},
+						"description": "Retourne les 5 produits les plus vus dans la dernière heure. Ces données sont calculées par le backend à partir de sa base de données locale."
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:5000",
+			"type": "string"
+		}
+	]
+}

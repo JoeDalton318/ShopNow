@@ -1,0 +1,131 @@
+services:
+  # Zookeeper
+  zookeeper:
+    image: wurstmeister/zookeeper
+    container_name: shopnow-zookeeper
+    ports:
+      - "2181:2181"
+    networks:
+      - default
+
+  # Kafka
+  kafka:
+    image: wurstmeister/kafka
+    container_name: shopnow-kafka
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: shopnow-zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+      KAFKA_CREATE_TOPICS: >
+        commande-validee:1:1,
+        produit-consulte:1:1,
+        article-ajoute:1:1,
+        paiement-accepte:1:1,
+        stock-mis-a-jour:1:1
+    depends_on:
+      - zookeeper
+    networks:
+      default:
+        aliases:
+          - kafka
+
+
+  # HDFS - NameNode
+  namenode:
+    image: bde2020/hadoop-namenode:2.0.0-hadoop3.2.1-java8
+    container_name: namenode
+    ports:
+      - "9870:9870"
+    environment:
+      - CLUSTER_NAME=bigdata-cluster
+    volumes:
+      - hdfs_namenode:/hadoop/dfs/name
+
+  # HDFS - DataNode
+  datanode:
+    image: bde2020/hadoop-datanode:2.0.0-hadoop3.2.1-java8
+    container_name: datanode
+    ports:
+      - "9864:9864"
+    environment:
+      - CLUSTER_NAME=bigdata-cluster
+      - CORE_CONF_fs_defaultFS=hdfs://namenode:8020
+    volumes:
+      - hdfs_datanode:/hadoop/dfs/data
+    depends_on:
+      - namenode
+
+  # Spark Streaming
+  spark:
+    build:
+      context: ./spark
+    depends_on:
+      - kafka
+      - namenode
+    volumes:
+      - ./kafka/output:/app/data
+    networks:
+      - default
+    restart: unless-stopped
+
+  # Kafka Consumer -> HDFS
+  kafka-consumer:
+    build:
+      context: ./kafka
+    depends_on:
+      - kafka
+      - namenode
+    volumes:
+      - ./kafka/output:/app/output
+    networks:
+      - default
+
+  # Backend Flask
+  backend:
+    build:
+      context: ./backend
+    ports:
+      - "8000:5000"
+    environment:
+          - FLASK_DEBUG=1
+    volumes:
+      - ./backend:/app
+    depends_on:
+      - kafka
+    restart: unless-stopped
+    networks:
+      - default
+
+  # Frontend React
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "3000:3000"
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules   
+    command: npm start
+    stdin_open: true
+    tty: true
+    depends_on:
+      - backend
+    environment:
+      - REACT_APP_BACKEND_URL=http://localhost:8000
+    restart: unless-stopped
+    networks:
+      - default
+
+volumes:
+  hdfs_namenode:
+  hdfs_datanode:
+
+networks:
+  default:
+    driver: bridge

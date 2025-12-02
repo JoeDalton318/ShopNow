@@ -1,0 +1,92 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f8f9fa;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Mode sombre */
+body[data-bs-theme="dark"] {
+  background-color: #212529;
+  color: #f8f9fa;
+}
+
+body[data-bs-theme="dark"] .bg-light {
+  background-color: #343a40 !important;
+}
+
+body[data-bs-theme="dark"] .text-dark {
+  color: #f8f9fa !important;
+}
+
+body[data-bs-theme="dark"] .card {
+  background-color: #343a40;
+  color: #f8f9fa;
+  border-color: #495057;
+}
+
+body[data-bs-theme="dark"] .form-control,
+body[data-bs-theme="dark"] .form-select {
+  background-color: #495057;
+  color: #f8f9fa;
+  border-color: #6c757d;
+}
+
+body[data-bs-theme="dark"] .form-control:focus,
+body[data-bs-theme="dark"] .form-select:focus {
+  background-color: #495057;
+  color: #f8f9fa;
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+body[data-bs-theme="dark"] .btn-outline-primary {
+  color: #0d6efd;
+  border-color: #0d6efd;
+}
+
+body[data-bs-theme="dark"] .btn-outline-primary:hover {
+  background-color: #0d6efd;
+  color: #fff;
+}
+
+body[data-bs-theme="dark"] .alert-danger {
+  background-color: #842029;
+  border-color: #a52834;
+  color: #f8d7da;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.card {
+  transition: transform 0.2s, box-shadow 0.2s;
+  position: relative;
+  z-index: 1;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  z-index: 2;
+}
+
+/* Fix pour les dropdowns Bootstrap */
+.dropdown-menu {
+  z-index: 1050;
+}
+
+.navbar {
+  z-index: 1030;
+}
+
+/* Sidebar sticky avec z-index correct */
+.position-sticky {
+  z-index: 10;
+}

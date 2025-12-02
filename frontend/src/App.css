@@ -1,0 +1,16 @@
+.App {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  transition: background-color 0.3s ease;
+}
+
+.App main {
+  flex: 1;
+}
+
+/* Mode sombre pour l'App */
+[data-bs-theme="dark"] .App {
+  background-color: #212529;
+  color: #f8f9fa;
+}
